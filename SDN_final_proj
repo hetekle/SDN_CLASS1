@@ -1,0 +1,83 @@
+########################################################################
+#SDN hands on training for AT&T by WWT                                 #
+#Instructor: Joel King                                                 #
+#                                                                      #
+#The Cleass below demonstrate the router cobfiguration.                #
+#The class Router_Config has a method to show device identification,   #
+#copy the current image and configure vlan and interface on the router #
+########################################################################
+
+import cisco
+import sys
+import time
+from cli import *
+
+class Router_Config():
+
+        Device      = cisco.cli("show hostname")
+        kickstart   = cisco.cli("sh ver | i kickstart")
+        Processor   = cisco.cli("sh ver | i Process")
+        Image       = cisco.transfer(protocol='tftp', host='10.255.40.101', source='/SDN/SDN_Programming_Fundamentals/ftp/n3000-uk9.6.0.2.U3.7.bin_sdnclass02', dest='bootflash:n3000-uk9.6.0.2.U3.7.bin_sdnclass_heniks', vrf='management', login_timeout=10, user='sdnclass', password='Educ@te!')
+        Inte        = rawinput(" Please enter the Interface as e1/XX__")
+        vlan        = rawinput(" Please enter the vlan number as vlanXXXX __")
+    
+    Def Iden_Device(Device,kickstart,Processor):
+    #Identify the Device
+        Device_name        = Device[1]   
+        kickstart_version  = kickstart[1:] 
+        Processor_Board_ID = Processor[1:]
+        
+        print Device_name,kickstart_version,Processor_Board_ID
+    
+    Def Tran_Image()
+    
+    # Transfer a System Image
+    #copy tftp://x.x.x.x/image_name bootflash:/scripts/sdnclass/image_name_ht
+    #
+    Transfered_image = Image
+    new_image = "n3000-uk9.6.0.2.U3.7.bin_sdnclass_heniks"
+    #
+    cliObj = cisco.CLI("dir bootflash:",do_print=False)
+    for oline in cliObj.get_output():
+    if new_image in oline:
+    print "%s is on bootflash:" % oline
+    break
+    #
+    exit()
+    
+    
+    
+    Def Mod_Conf(Inte,vlan)
+        # Modify the Configuration
+    
+        #
+        self.Inte = Inte
+        Self.vlan = vlan
+        Inte = True
+        #
+        while Inte:
+        cmd_output = cisco.cli("show interface Inte")
+        cmd = cisco.cli("show interface Inte")
+        
+        
+        #
+        cisco.cli("conf ; int e1/25; no switchport; ip address 192.168.100.10/24; no shut")
+        cisco.cli("conf ; vlan 1024;description SDNCLASS1024_Henok;ip address 198.51.100.1 no sht")
+        cisco.cli("conf ; int e1/24; description SDNCLASS1024; switchport; switchport access vlan 1024 ; no shut")
+        cisco.clip("show run int e1/2")
+        raw_input('press Enter to continue')
+        cisco.clip("show run int e1/3")
+        raw_input('press Enter to continue')
+        cisco.clip("show int brief")
+        print “Interface scripting completed!”
+        
+        if not "Administratively down" in cmd_output:
+        Inte = False
+        print ("%s Interface is no longer shutdown.",%Inte)
+        time.sleep(2)
+        #
+    
+     
+ Router_Config.Iden_Device(Device,kickstart,Processor)
+ Router_Config.Tran_Image()
+ Router_Config.Mod_Conf(Interface,vlan)
