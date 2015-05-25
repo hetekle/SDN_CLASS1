@@ -64,9 +64,9 @@ class Router_Config():
         cisco.cli("conf ; int e1/25; no switchport; ip address 192.168.100.10/24; no shut")
         cisco.cli("conf ; vlan 1024;description SDNCLASS1024_Henok;ip address 198.51.100.1 no sht")
         cisco.cli("conf ; int e1/24; description SDNCLASS1024; switchport; switchport access vlan 1024 ; no shut")
-        cisco.clip("show run int e1/2")
+        cisco.clip("show run int e1/25")
         raw_input('press Enter to continue')
-        cisco.clip("show run int e1/3")
+        cisco.clip("show run int e1/24")
         raw_input('press Enter to continue')
         cisco.clip("show int brief")
         print “Interface scripting completed!”
